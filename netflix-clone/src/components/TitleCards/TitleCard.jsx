@@ -1,11 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./TitleCard.css";
-import title_cards from "../../assets/cards/Cards_data.js";
 
-const TitleCard = ({title,category}) => {
+const TitleCard = ({ title, category }) => {
   const cardsRef = useRef();
-  console.log
+  const [api, setApi] = useState([]);
 
+  const API_KEY = import.meta.env.VITE_YOUTUBE_KEY;
+  const channelId = "UCZSNzBgFub_WWil6TOTYwAg"; 
+
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&channelId=${channelId}&maxResults=10&order=date&key=${API_KEY}`;
+
+  
   const handleWheel = (event) => {
     event.preventDefault();
     cardsRef.current.scrollLeft += event.deltaY;
@@ -14,22 +19,44 @@ const TitleCard = ({title,category}) => {
   useEffect(() => {
     const scrollContainer = cardsRef.current;
     scrollContainer.addEventListener("wheel", handleWheel);
-
-    return () => {
-      scrollContainer.removeEventListener("wheel", handleWheel,{ passive: false });
-    };
+    return () => scrollContainer.removeEventListener("wheel", handleWheel);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        setApi(data.items || []);
+        console.log(data.items);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [category]);
 
   return (
     <div className="title-cards">
-      <h2>{title ? title : "Popular on Netflix" }</h2>
+      <h2>{title ? title : "Popular on Netflix"}</h2>
       <div className="card-lists" ref={cardsRef}>
-        {title_cards.map((card, index) => (
-          <div className="card" key={index}>
-            <img src={card.image} alt={card.name} />
-            <p>{card.name}</p>
-          </div>
-        ))}
+        {api.map((item, index) => {
+          const videoId = item.id?.videoId;
+          const snippet = item.snippet;
+          const thumbnailUrl = snippet?.thumbnails?.medium?.url;
+
+          if (!videoId || !thumbnailUrl) return null;
+
+          return (
+            <div className="card" key={index}>
+              <a   target="_blank"
+                rel="noreferrer">
+                <img src={thumbnailUrl} alt={snippet.title} />
+              </a>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

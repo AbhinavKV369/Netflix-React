@@ -32,18 +32,25 @@ const Home = () => {
               More Info
             </button>
           </div>
-          <TitleCard />
+          <TitleCard
+            title={"Now Streaming"}
+            category={"latest netflix shows"}
+          />
         </div>
       </div>
+
       <div className="more-cards">
-        <TitleCard title={"Blockbuster Movies"}/>
-        <TitleCard title={"Only on Netflix"} />
-        <TitleCard title={"Upcoming"}/>
-        <TitleCard title={"Top Picks For You"}/>
+        <TitleCard title={"Blockbuster Movies"} category={"top_movies"} />
+        <TitleCard title={"Only on Netflix"} category={"only_netflix"} />
+        <TitleCard title={"Upcoming"} category={"upcoming_movies"} />
+        <TitleCard title={"Top Picks For You"} category={"new_series"} />
       </div>
+
       <Footer />
     </div>
   );
 };
 
 export default Home;
+
+
