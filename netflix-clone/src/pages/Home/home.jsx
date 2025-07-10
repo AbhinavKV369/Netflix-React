@@ -9,6 +9,14 @@ import info_icon from "../../assets/info_icon.png";
 import TitleCard from "../../components/TitleCards/TitleCard";
 import Footer from "../../components/Footer/Footer";
 
+const trailerSections = [
+  { title: "Now Streaming", category: "latest_trailer" },
+  { title: "Blockbuster Movies", category: "top_trailer" },
+  { title: "Only on Netflix", category: "netflix_trailer" },
+  { title: "Upcoming", category: "upcoming_trailer" },
+  { title: "Top Picks For You", category: "new_trailer" },
+];
+
 const Home = () => {
   return (
     <div>
@@ -32,18 +40,17 @@ const Home = () => {
               More Info
             </button>
           </div>
-          <TitleCard
-            title={"Now Streaming"}
-            category={"latest netflix shows"}
-          />
         </div>
       </div>
 
       <div className="more-cards">
-        <TitleCard title={"Blockbuster Movies"} category={"top_movies"} />
-        <TitleCard title={"Only on Netflix"} category={"only_netflix"} />
-        <TitleCard title={"Upcoming"} category={"upcoming_movies"} />
-        <TitleCard title={"Top Picks For You"} category={"new_series"} />
+        {trailerSections.map((section, index) => (
+          <TitleCard
+            key={index}
+            title={section.title}
+            category={section.category}
+          />
+        ))}
       </div>
 
       <Footer />
@@ -52,5 +59,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
